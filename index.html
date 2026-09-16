@@ -1,0 +1,1294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Amazon STAR Mock Interviewer</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --bg-elevated: #1e293b;
+      --bg-card: #1e293b;
+      --border: #334155;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --accent-soft: rgba(59, 130, 246, 0.15);
+      --success: #22c55e;
+      --success-soft: rgba(34, 197, 94, 0.15);
+      --warning: #f59e0b;
+      --warning-soft: rgba(245, 158, 11, 0.15);
+      --error: #ef4444;
+      --error-soft: rgba(239, 68, 68, 0.15);
+      --radius: 12px;
+      --shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+      --font: "Segoe UI", system-ui, -apple-system, sans-serif;
+      --mono: ui-monospace, "Cascadia Code", "SF Mono", Menlo, monospace;
+    }
+
+    [data-theme="light"] {
+      --bg: #f1f5f9;
+      --bg-elevated: #ffffff;
+      --bg-card: #ffffff;
+      --border: #cbd5e1;
+      --text: #0f172a;
+      --text-muted: #64748b;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --accent-soft: rgba(37, 99, 235, 0.1);
+      --success-soft: rgba(34, 197, 94, 0.12);
+      --warning-soft: rgba(245, 158, 11, 0.12);
+      --error-soft: rgba(239, 68, 68, 0.1);
+      --shadow: 0 8px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font);
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(59, 130, 246, 0.18), transparent),
+        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(15, 23, 42, 0.4), transparent),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    [data-theme="light"] body {
+      background:
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(37, 99, 235, 0.12), transparent),
+        radial-gradient(ellipse 60% 40% at 0% 100%, rgba(148, 163, 184, 0.2), transparent),
+        var(--bg);
+    }
+
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+      background: color-mix(in srgb, var(--bg-elevated) 85%, transparent);
+      backdrop-filter: blur(12px);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), #1e40af);
+      display: grid;
+      place-items: center;
+      font-weight: 700;
+      font-size: 0.75rem;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-text h1 {
+      font-size: 1rem;
+      font-weight: 650;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-text p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .icon-btn {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: border-color 0.2s, background 0.2s;
+    }
+
+    .icon-btn:hover {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+
+    .icon-btn svg {
+      width: 18px;
+      height: 18px;
+      fill: none;
+      stroke: currentColor;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    main {
+      max-width: 880px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+    }
+
+    .screen {
+      display: none;
+      animation: fadeIn 0.35s ease;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* —— Start —— */
+    .splash {
+      text-align: center;
+      padding: 3rem 1rem 2rem;
+    }
+
+    .splash-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      border: 1px solid color-mix(in srgb, var(--accent) 30%, transparent);
+    }
+
+    .splash h2 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+      max-width: 18ch;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .splash .lede {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      max-width: 42ch;
+      margin: 0 auto 2rem;
+    }
+
+    .feature-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 2.5rem 0;
+      text-align: left;
+    }
+
+    @media (max-width: 640px) {
+      .feature-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .feature {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.15rem;
+      box-shadow: var(--shadow);
+    }
+
+    .feature-num {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--accent);
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .feature h3 {
+      font-size: 0.95rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .feature p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding: 0.85rem 1.75rem;
+      border-radius: 10px;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      box-shadow: none;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      justify-content: center;
+      margin-top: 1.5rem;
+    }
+
+    /* —— Interview —— */
+    .interview-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .interview-meta h2 {
+      font-size: 1.35rem;
+      letter-spacing: -0.02em;
+    }
+
+    .progress-wrap {
+      flex: 1;
+      min-width: 160px;
+      max-width: 280px;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-bottom: 0.35rem;
+    }
+
+    .progress-bar {
+      height: 6px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), #60a5fa);
+      border-radius: 999px;
+      transition: width 0.3s ease;
+      width: 0%;
+    }
+
+    .question-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.35rem;
+      margin-bottom: 1.25rem;
+      box-shadow: var(--shadow);
+      transition: border-color 0.2s;
+    }
+
+    .question-card:focus-within {
+      border-color: var(--accent);
+    }
+
+    .q-header {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .q-index {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .principle-tag {
+      display: inline-block;
+      padding: 0.25rem 0.65rem;
+      border-radius: 6px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .q-text {
+      font-size: 1.05rem;
+      font-weight: 550;
+      margin-bottom: 1rem;
+      letter-spacing: -0.015em;
+    }
+
+    .star-hint {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .star-hint strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 140px;
+      resize: vertical;
+      padding: 0.9rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-family: inherit;
+      font-size: 0.95rem;
+      line-height: 1.55;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    textarea:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px var(--accent-soft);
+    }
+
+    textarea::placeholder {
+      color: var(--text-muted);
+      opacity: 0.8;
+    }
+
+    .char-count {
+      text-align: right;
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+      font-family: var(--mono);
+    }
+
+    /* —— Results —— */
+    .score-hero {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .score-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at 50% 0%, var(--accent-soft), transparent 60%);
+      pointer-events: none;
+    }
+
+    .score-hero > * {
+      position: relative;
+    }
+
+    .score-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .score-value {
+      font-size: clamp(3rem, 8vw, 4.5rem);
+      font-weight: 750;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .score-value.good { color: var(--success); }
+    .score-value.mid { color: var(--warning); }
+    .score-value.low { color: var(--error); }
+
+    .score-band {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+
+    .structure-bars {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      text-align: left;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 520px) {
+      .structure-bars {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .struct-item label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      margin-bottom: 0.35rem;
+    }
+
+    .struct-item label span:last-child {
+      font-family: var(--mono);
+      color: var(--text-muted);
+    }
+
+    .struct-bar {
+      height: 8px;
+      background: var(--border);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .struct-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.6s ease;
+    }
+
+    .struct-fill.st { background: #60a5fa; }
+    .struct-fill.ac { background: #34d399; }
+    .struct-fill.re { background: #fbbf24; }
+
+    .weight-note {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      margin-top: 1.25rem;
+    }
+
+    .results-section-title {
+      font-size: 1.1rem;
+      font-weight: 650;
+      margin: 2rem 0 1rem;
+      letter-spacing: -0.02em;
+    }
+
+    .feedback-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      box-shadow: var(--shadow);
+    }
+
+    .feedback-card .q-header {
+      margin-bottom: 0.65rem;
+    }
+
+    .feedback-card .q-text {
+      font-size: 0.95rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .mini-scores {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .chip {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.3rem 0.65rem;
+      border-radius: 6px;
+      font-family: var(--mono);
+    }
+
+    .chip.ok {
+      background: var(--success-soft);
+      color: var(--success);
+    }
+
+    .chip.warn {
+      background: var(--warning-soft);
+      color: var(--warning);
+    }
+
+    .chip.bad {
+      background: var(--error-soft);
+      color: var(--error);
+    }
+
+    .alert-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .alert {
+      display: flex;
+      gap: 0.65rem;
+      align-items: flex-start;
+      padding: 0.75rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      border: 1px solid transparent;
+    }
+
+    .alert.success {
+      background: var(--success-soft);
+      border-color: color-mix(in srgb, var(--success) 25%, transparent);
+      color: var(--text);
+    }
+
+    .alert.error {
+      background: var(--error-soft);
+      border-color: color-mix(in srgb, var(--error) 25%, transparent);
+    }
+
+    .alert.warning {
+      background: var(--warning-soft);
+      border-color: color-mix(in srgb, var(--warning) 25%, transparent);
+    }
+
+    .alert-icon {
+      flex-shrink: 0;
+      width: 1.1rem;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    .alert.success .alert-icon { color: var(--success); }
+    .alert.error .alert-icon { color: var(--error); }
+    .alert.warning .alert-icon { color: var(--warning); }
+
+    .footer-note {
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-mark" aria-hidden="true">LP</div>
+      <div class="brand-text">
+        <h1>Amazon STAR Mock Interviewer</h1>
+        <p>Leadership Principles · Behavioral practice</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <button type="button" class="icon-btn" id="themeToggle" aria-label="Toggle light or dark theme" title="Toggle theme">
+        <svg id="themeIcon" viewBox="0 0 24 24" aria-hidden="true">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <main>
+    <!-- Start Screen -->
+    <section id="startScreen" class="screen active" aria-label="Start">
+      <div class="splash">
+        <div class="splash-badge">LP coaching + STAR practice bank</div>
+        <h2>Practice Amazon behavioral interviews with STAR</h2>
+        <p class="lede">
+          Answer 5 randomly selected questions from Leadership Principle coaching
+          prompts and STAR practice drills. Get feedback tuned to Situation vs Task,
+          specific Actions, and quantified Results.
+        </p>
+        <button type="button" class="btn btn-primary" id="startBtn">
+          Start Mock Interview
+        </button>
+        <div class="feature-row">
+          <div class="feature">
+            <div class="feature-num">01</div>
+            <h3>Coaching + practice bank</h3>
+            <p>Amazon LP prompts plus general behavioral STAR drills in one shuffle.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-num">02</div>
+            <h3>STAR structure</h3>
+            <p>Keep Situation brief, own the Task, make Action the play-by-play, close on Result.</p>
+          </div>
+          <div class="feature">
+            <div class="feature-num">03</div>
+            <h3>Coaching-style scorecard</h3>
+            <p>Flags vague actions, blended S/T, “we” language, and missing metrics.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Interview Screen -->
+    <section id="interviewScreen" class="screen" aria-label="Interview">
+      <div class="interview-meta">
+        <h2>Mock Interview</h2>
+        <div class="progress-wrap">
+          <div class="progress-label">
+            <span>Answers filled</span>
+            <span id="progressText">0 / 5</span>
+          </div>
+          <div class="progress-bar" role="progressbar" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0" id="progressBar">
+            <div class="progress-fill" id="progressFill"></div>
+          </div>
+        </div>
+      </div>
+      <form id="interviewForm">
+        <div id="questionsContainer"></div>
+        <div class="btn-row">
+          <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="submitBtn" disabled>Submit for Grading</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Grading Screen -->
+    <section id="resultsScreen" class="screen" aria-label="Results">
+      <div class="score-hero">
+        <div class="score-label">Overall STAR Score</div>
+        <div class="score-value" id="overallScore">0</div>
+        <div class="score-band" id="scoreBand">—</div>
+        <div class="structure-bars">
+          <div class="struct-item">
+            <label><span>Situation / Task</span><span id="stAvg">0%</span></label>
+            <div class="struct-bar"><div class="struct-fill st" id="stFill" style="width:0%"></div></div>
+          </div>
+          <div class="struct-item">
+            <label><span>Action</span><span id="acAvg">0%</span></label>
+            <div class="struct-bar"><div class="struct-fill ac" id="acFill" style="width:0%"></div></div>
+          </div>
+          <div class="struct-item">
+            <label><span>Result</span><span id="reAvg">0%</span></label>
+            <div class="struct-bar"><div class="struct-fill re" id="reFill" style="width:0%"></div></div>
+          </div>
+        </div>
+        <p class="weight-note">Weights: Situation/Task 25% · Action 40% (aim for ~60% of your story) · Result 35%</p>
+      </div>
+
+      <h3 class="results-section-title">Question-by-question feedback</h3>
+      <div id="feedbackContainer"></div>
+
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" id="homeBtn">Back to Start</button>
+        <button type="button" class="btn btn-primary" id="retryBtn">New Interview</button>
+      </div>
+    </section>
+
+    <p class="footer-note">
+      Heuristic scoring for practice only — not affiliated with Amazon. Open this file in any modern browser.
+    </p>
+  </main>
+
+  <script>
+    (function () {
+      "use strict";
+
+      /* ——— Question bank: coaching-guide LPs + STAR practice drills + full 16 LPs ——— */
+      const QUESTION_BANK = [
+        /* Section: Coaching guide — sample questions by Leadership Principle */
+        {
+          principle: "Customer Obsession",
+          question: "Tell me about a time you went above and beyond for a customer (internal or external)."
+        },
+        {
+          principle: "Customer Obsession",
+          question: "Describe a time you had to make a decision that wasn't popular but was right for the customer."
+        },
+        {
+          principle: "Ownership",
+          question: "Tell me about a time you saw a problem and took it upon yourself to fix it, even though it wasn't your responsibility."
+        },
+        {
+          principle: "Ownership",
+          question: "Describe a time you took on something outside your job scope."
+        },
+        {
+          principle: "Dive Deep",
+          question: "Tell me about a time you used data to make a decision or solve a problem."
+        },
+        {
+          principle: "Dive Deep",
+          question: "Describe a situation where you had to dig into the details to find the root cause of an issue."
+        },
+        {
+          principle: "Bias for Action",
+          question: "Tell me about a time you had to make a decision quickly without having all the information."
+        },
+        {
+          principle: "Bias for Action",
+          question: "Describe a time when you took a calculated risk."
+        },
+        {
+          principle: "Deliver Results",
+          question: "Tell me about a time you had a tight deadline and how you managed to deliver."
+        },
+        {
+          principle: "Deliver Results",
+          question: "Describe your most impactful accomplishment at work."
+        },
+        {
+          principle: "Earn Trust",
+          question: "Tell me about a time you received tough feedback and what you did with it."
+        },
+        {
+          principle: "Earn Trust",
+          question: "Describe a time you had to admit a mistake."
+        },
+        {
+          principle: "Invent and Simplify",
+          question: "Tell me about a time you found a simpler way to do something."
+        },
+        {
+          principle: "Invent and Simplify",
+          question: "Describe a process you improved or automated."
+        },
+
+        /* Section: STAR practice packet — behavioral drills */
+        {
+          principle: "Have Backbone; Disagree and Commit",
+          question: "Tell me about a situation when you had to convince your manager to take an action that was not very popular. How did you navigate this situation?"
+        },
+        {
+          principle: "Are Right, A Lot",
+          question: "Tell me about a time you were presented with an ambiguous problem. What was the problem and how did you respond?"
+        },
+        {
+          principle: "Dive Deep",
+          question: "Tell me about a time when you had to work with a lot of data to solve a problem. What was the situation and what methodology did you use to solve the problem?"
+        },
+        {
+          principle: "Invent and Simplify",
+          question: "Tell me about a time when you had to simplify complicated data and explain it to team members or stakeholders. What steps did you take to simplify the data and present it in a way your audience could easily understand?"
+        },
+        {
+          principle: "Bias for Action",
+          question: "Describe a time when you had to complete a project in which you were provided with very little information or guidance. How did you approach the situation?"
+        },
+        {
+          principle: "Have Backbone; Disagree and Commit",
+          question: "Tell me about a time when you disagreed with a senior member on the team. How did you approach the situation? What did you learn from the experience?"
+        },
+        {
+          principle: "Earn Trust",
+          question: "Tell me about a time when you had to convince your team to change directions. What was your rationale for changing course and how did you go about convincing them? Were you successful?"
+        },
+        {
+          principle: "Bias for Action",
+          question: "Tell me about a time when you took a risk. What was the risk and how did you arrive at the decision to take it? What was the result of taking that risk? Would you do anything differently if faced with the same situation?"
+        },
+        {
+          principle: "Dive Deep",
+          question: "Tell me about a time when you had to convince other people using data. How did you approach the situation?"
+        },
+        {
+          principle: "Ownership",
+          question: "Tell me about a time when a project, product, or service implementation did not go according to plan. How did you handle the situation?"
+        },
+        {
+          principle: "Earn Trust",
+          question: "Describe a time when you presented a proposal or provided a service that was given an unfavorable response by stakeholders. How did you respond and what did you learn?"
+        },
+        {
+          principle: "Ownership",
+          question: "Tell me about a time when you experienced a major organizational change (for example, a reorganization, a new supervisor, or a new procedure) that created stress. How did you respond?"
+        },
+        {
+          principle: "Think Big",
+          question: "Describe a time when you proposed a major change in your work process or job duties. How did others respond to your proposal? Would you do anything differently?"
+        },
+
+        /* Remaining Leadership Principles so all 16 are covered */
+        {
+          principle: "Learn and Be Curious",
+          question: "Describe a time you taught yourself a new skill or domain to solve a business problem. What was the impact?"
+        },
+        {
+          principle: "Hire and Develop the Best",
+          question: "Tell me about a time you coached or mentored someone and helped them grow. What was your approach?"
+        },
+        {
+          principle: "Insist on the Highest Standards",
+          question: "Describe a time you refused to settle for 'good enough' and pushed for a higher bar. What changed?"
+        },
+        {
+          principle: "Frugality",
+          question: "Describe a time you accomplished more with less — constrained budget, headcount, or resources. How did you do it?"
+        },
+        {
+          principle: "Strive to be Earth's Best Employer",
+          question: "Describe a time you improved the workplace experience for your team or colleagues. What did you change?"
+        },
+        {
+          principle: "Success and Scale Bring Broad Responsibility",
+          question: "Tell me about a time you considered the broader impact of your work on community, environment, or society — and acted on it."
+        }
+      ];
+
+      /* ——— STAR grading heuristics (aligned to coaching guide) ——— */
+      const ST_CONTEXT = [
+        "project", "client", "customer", "problem", "deadline", "task", "launched",
+        "situation", "challenge", "issue", "team", "company", "stakeholder", "goal",
+        "requirement", "crisis", "urgent", "context", "background", "when", "while",
+        "inbound", "outbound", "shift", "manager", "process", "spike", "delay",
+        "working as", "i was", "during", "at my"
+      ];
+
+      const TASK_MARKERS = [
+        "my task", "my responsibility", "i needed to", "i had to", "i took it on",
+        "i took on", "i was responsible", "my role", "i owned", "assigned to me",
+        "i set out to", "my goal was", "i was asked to"
+      ];
+
+      const ACTION_PHRASES = [
+        "i designed", "i implemented", "i led", "i analyzed", "i decided",
+        "i created", "i built", "i developed", "i managed", "i coordinated",
+        "i negotiated", "i proposed", "i drove", "i owned", "i delivered",
+        "i improved", "i resolved", "i identified", "i prioritized", "i facilitated",
+        "i launched", "i established", "i redefined", "i measured", "i communicated",
+        "i scanned", "i alerted", "i pulled", "i found", "i confirmed",
+        "i escalated", "i investigated", "i checked", "i used", "i went",
+        "i separated", "i downstacked", "i messaged", "i called", "i built a"
+      ];
+
+      const SPECIFICITY_MARKERS = [
+        "tool", "system", "report", "data", "label", "scan", "root cause",
+        "standup", "message", "email", "dashboard", "metric", "process",
+        "step", "first", "then", "next", "because", "using", "specifically"
+      ];
+
+      const RESULT_MARKERS = [
+        "%", "percent", "percentage", "increased by", "decreased by", "reduced by",
+        "saved", "days", "weeks", "months", "hours", "$", "revenue", "cost",
+        "roi", "nps", "metric", "kpi", "from ", " to ", "grew", "boosted",
+        "cut", "eliminated", "achieved", "resulted in", "outcome", "cases",
+        "units", "prevented", "dropped from", "within", "per week", "per day"
+      ];
+
+      function escapeHtml(str) {
+        return String(str)
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+
+      function shuffle(arr) {
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      }
+
+      function countMatches(text, list) {
+        const lower = text.toLowerCase();
+        let hits = 0;
+        const found = [];
+        for (const item of list) {
+          if (lower.includes(item.toLowerCase())) {
+            hits++;
+            found.push(item);
+          }
+        }
+        return { hits, found };
+      }
+
+      function countFirstPersonI(text) {
+        const matches = text.match(/\bI\b/g);
+        return matches ? matches.length : 0;
+      }
+
+      function countWe(text) {
+        const matches = text.match(/\bwe\b/gi);
+        return matches ? matches.length : 0;
+      }
+
+      function hasNumber(text) {
+        return /\d/.test(text);
+      }
+
+      /**
+       * Grade one answer 0–100.
+       * Situation/Task 25%, Action 40%, Result 35%.
+       * Heuristics mirror coaching guide: brief S, distinct T, specific A with "I", quantified R.
+       */
+      function gradeAnswer(answer) {
+        const trimmed = (answer || "").trim();
+        const feedback = [];
+
+        if (trimmed.length < 40) {
+          return {
+            total: 0,
+            st: 0,
+            action: 0,
+            result: 0,
+            feedback: [
+              { type: "error", text: "Answer too short to evaluate. Aim for a 2–3 minute STAR story with Situation, Task, Action, and Result." }
+            ]
+          };
+        }
+
+        /* Situation / Task (0–100) — context + personal Task beat */
+        const stMatch = countMatches(trimmed, ST_CONTEXT);
+        const taskMatch = countMatches(trimmed, TASK_MARKERS);
+        let st = Math.min(70, stMatch.hits * 14);
+        if (taskMatch.hits > 0) st = Math.min(100, st + 25);
+        else st = Math.min(100, st + 5);
+        if (trimmed.length > 120) st = Math.min(100, st + 8);
+
+        if (stMatch.hits === 0) {
+          feedback.push({
+            type: "error",
+            text: "Situation is too vague — set the scene in 2–3 sentences so someone outside your workplace can picture it."
+          });
+        } else if (taskMatch.hits === 0) {
+          feedback.push({
+            type: "warning",
+            text: "Situation and Task look blended. Separate them: Situation = what was happening; Task = your specific responsibility (\"I needed to…\" / \"I took it on…\")."
+          });
+        } else if (st < 60) {
+          feedback.push({
+            type: "warning",
+            text: "Situation/Task is thin — add brief context, then a clear personal Task beat."
+          });
+        } else {
+          feedback.push({
+            type: "success",
+            text: "Solid Situation context with a distinct personal Task."
+          });
+        }
+
+        /* Action (0–100) — play-by-play, "I" not "we", specificity */
+        const actionMatch = countMatches(trimmed, ACTION_PHRASES);
+        const specMatch = countMatches(trimmed, SPECIFICITY_MARKERS);
+        const iCount = countFirstPersonI(trimmed);
+        const weCount = countWe(trimmed);
+        let action = Math.min(100, actionMatch.hits * 16 + Math.min(iCount, 6) * 6 + Math.min(specMatch.hits, 4) * 6);
+
+        if (weCount > iCount && iCount < 2) {
+          action = Math.max(0, action - 30);
+          feedback.push({
+            type: "error",
+            text: "Too much \"we,\" not enough \"I.\" Say what you personally did (e.g., \"I pulled the data, found the cause, and coordinated the fix\")."
+          });
+        } else if (actionMatch.hits === 0 && iCount < 2) {
+          feedback.push({
+            type: "error",
+            text: "Actions are missing. This should be ~60% of your answer — name specific steps, tools, systems, and decisions."
+          });
+        } else if (specMatch.hits < 2 || action < 55) {
+          feedback.push({
+            type: "warning",
+            text: "Action is too vague — interviewer wants the play-by-play. What exactly did you check, which tool, what root cause, and how did you communicate?"
+          });
+        } else {
+          feedback.push({
+            type: "success",
+            text: "Clear personal Action with useful specificity."
+          });
+        }
+        action = Math.max(0, Math.min(100, action));
+
+        /* Result (0–100) — require numbers */
+        const resultMatch = countMatches(trimmed, RESULT_MARKERS);
+        let result = Math.min(100, resultMatch.hits * 16);
+        if (hasNumber(trimmed)) result = Math.min(100, result + 30);
+        if (/\$/.test(trimmed) || /%/.test(trimmed)) result = Math.min(100, result + 15);
+
+        if (resultMatch.hits === 0 && !hasNumber(trimmed)) {
+          feedback.push({
+            type: "error",
+            text: "Missing quantifiable metrics in the Result. Attach numbers: cases/units, hours saved, %, $, or before→after impact. Even rough estimates beat \"a lot.\""
+          });
+        } else if (!hasNumber(trimmed) || result < 60) {
+          feedback.push({
+            type: "warning",
+            text: "Result needs concrete numbers — at least 1–2 metrics (e.g., \"~200 cases\" or \"saved ~15 hours/week\")."
+          });
+        } else {
+          feedback.push({
+            type: "success",
+            text: "Quantified Result indicators found."
+          });
+        }
+        result = Math.max(0, Math.min(100, result));
+
+        const total = Math.round(st * 0.25 + action * 0.4 + result * 0.35);
+
+        return { total, st: Math.round(st), action: Math.round(action), result: Math.round(result), feedback };
+      }
+
+      function chipClass(score) {
+        if (score >= 70) return "ok";
+        if (score >= 40) return "warn";
+        return "bad";
+      }
+
+      function bandFor(score) {
+        if (score >= 85) return "Excellent STAR structure";
+        if (score >= 70) return "Strong — minor gaps";
+        if (score >= 50) return "Developing — tighten structure";
+        if (score >= 30) return "Needs work — rebuild with STAR";
+        return "Insufficient — rewrite with full STAR";
+      }
+
+      /* ——— State ——— */
+      let currentQuestions = [];
+      let lastResults = [];
+
+      const startScreen = document.getElementById("startScreen");
+      const interviewScreen = document.getElementById("interviewScreen");
+      const resultsScreen = document.getElementById("resultsScreen");
+      const questionsContainer = document.getElementById("questionsContainer");
+      const feedbackContainer = document.getElementById("feedbackContainer");
+      const interviewForm = document.getElementById("interviewForm");
+      const submitBtn = document.getElementById("submitBtn");
+      const progressFill = document.getElementById("progressFill");
+      const progressText = document.getElementById("progressText");
+      const progressBar = document.getElementById("progressBar");
+
+      function showScreen(el) {
+        [startScreen, interviewScreen, resultsScreen].forEach((s) => s.classList.remove("active"));
+        el.classList.add("active");
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+
+      function updateProgress() {
+        const areas = questionsContainer.querySelectorAll("textarea");
+        let filled = 0;
+        areas.forEach((ta) => {
+          if (ta.value.trim().length > 0) filled++;
+        });
+        const pct = (filled / 5) * 100;
+        progressFill.style.width = pct + "%";
+        progressText.textContent = filled + " / 5";
+        progressBar.setAttribute("aria-valuenow", String(filled));
+        submitBtn.disabled = filled < 5;
+      }
+
+      function startInterview() {
+        currentQuestions = shuffle(QUESTION_BANK).slice(0, 5);
+        questionsContainer.innerHTML = "";
+
+        currentQuestions.forEach((q, i) => {
+          const card = document.createElement("article");
+          card.className = "question-card";
+          card.innerHTML =
+            '<div class="q-header">' +
+              '<span class="q-index">Question ' + (i + 1) + " of 5</span>" +
+              '<span class="principle-tag">' + escapeHtml(q.principle) + "</span>" +
+            "</div>" +
+            '<p class="q-text">' + escapeHtml(q.question) + "</p>" +
+            '<p class="star-hint"><strong>STAR tip:</strong> Brief Situation (2–3 sentences) → your Task → Action play-by-play with \"I\" (~60%) → Result with numbers</p>' +
+            '<label class="sr-only" for="answer-' + i + '">Your answer</label>' +
+            '<textarea id="answer-' + i + '" name="answer-' + i + '" rows="6" ' +
+              'placeholder="Situation (brief context)… Task (I needed to…)… Action (specific steps/tools I used…)… Result (numbers: cases, hours, %, $)…" ' +
+              'required></textarea>' +
+            '<div class="char-count" id="count-' + i + '">0 characters</div>';
+          questionsContainer.appendChild(card);
+
+          const ta = card.querySelector("textarea");
+          const count = card.querySelector(".char-count");
+          ta.addEventListener("input", function () {
+            count.textContent = ta.value.length + " characters";
+            updateProgress();
+          });
+        });
+
+        updateProgress();
+        showScreen(interviewScreen);
+      }
+
+      function submitInterview(e) {
+        e.preventDefault();
+        const grades = [];
+        let sumTotal = 0, sumSt = 0, sumAc = 0, sumRe = 0;
+
+        currentQuestions.forEach((q, i) => {
+          const answer = document.getElementById("answer-" + i).value;
+          const g = gradeAnswer(answer);
+          grades.push({ question: q, answer: answer, grade: g });
+          sumTotal += g.total;
+          sumSt += g.st;
+          sumAc += g.action;
+          sumRe += g.result;
+        });
+
+        lastResults = grades;
+        const overall = Math.round(sumTotal / 5);
+        const stAvg = Math.round(sumSt / 5);
+        const acAvg = Math.round(sumAc / 5);
+        const reAvg = Math.round(sumRe / 5);
+
+        const scoreEl = document.getElementById("overallScore");
+        scoreEl.textContent = String(overall);
+        scoreEl.className = "score-value " + (overall >= 70 ? "good" : overall >= 45 ? "mid" : "low");
+        document.getElementById("scoreBand").textContent = bandFor(overall);
+
+        document.getElementById("stAvg").textContent = stAvg + "%";
+        document.getElementById("acAvg").textContent = acAvg + "%";
+        document.getElementById("reAvg").textContent = reAvg + "%";
+        requestAnimationFrame(function () {
+          document.getElementById("stFill").style.width = stAvg + "%";
+          document.getElementById("acFill").style.width = acAvg + "%";
+          document.getElementById("reFill").style.width = reAvg + "%";
+        });
+
+        feedbackContainer.innerHTML = "";
+        grades.forEach(function (item, i) {
+          const g = item.grade;
+          const card = document.createElement("article");
+          card.className = "feedback-card";
+
+          const alerts = g.feedback.map(function (f) {
+            const icon = f.type === "success" ? "✓" : f.type === "warning" ? "!" : "✗";
+            return (
+              '<li class="alert ' + f.type + '">' +
+                '<span class="alert-icon" aria-hidden="true">' + icon + "</span>" +
+                "<span>" + escapeHtml(f.text) + "</span>" +
+              "</li>"
+            );
+          }).join("");
+
+          card.innerHTML =
+            '<div class="q-header">' +
+              '<span class="q-index">Q' + (i + 1) + " · Score " + g.total + "/100</span>" +
+              '<span class="principle-tag">' + escapeHtml(item.question.principle) + "</span>" +
+            "</div>" +
+            '<p class="q-text">' + escapeHtml(item.question.question) + "</p>" +
+            '<div class="mini-scores">' +
+              '<span class="chip ' + chipClass(g.st) + '">S/T ' + g.st + "</span>" +
+              '<span class="chip ' + chipClass(g.action) + '">Action ' + g.action + "</span>" +
+              '<span class="chip ' + chipClass(g.result) + '">Result ' + g.result + "</span>" +
+            "</div>" +
+            '<ul class="alert-list">' + alerts + "</ul>";
+
+          feedbackContainer.appendChild(card);
+        });
+
+        showScreen(resultsScreen);
+      }
+
+      /* Theme */
+      function applyTheme(theme) {
+        document.documentElement.setAttribute("data-theme", theme);
+        try { localStorage.setItem("star-mock-theme", theme); } catch (_) {}
+      }
+
+      function initTheme() {
+        let theme = "dark";
+        try {
+          theme = localStorage.getItem("star-mock-theme") || "dark";
+        } catch (_) {}
+        applyTheme(theme);
+      }
+
+      document.getElementById("themeToggle").addEventListener("click", function () {
+        const current = document.documentElement.getAttribute("data-theme") || "dark";
+        applyTheme(current === "dark" ? "light" : "dark");
+      });
+
+      document.getElementById("startBtn").addEventListener("click", startInterview);
+      document.getElementById("cancelBtn").addEventListener("click", function () {
+        showScreen(startScreen);
+      });
+      document.getElementById("homeBtn").addEventListener("click", function () {
+        showScreen(startScreen);
+      });
+      document.getElementById("retryBtn").addEventListener("click", startInterview);
+      interviewForm.addEventListener("submit", submitInterview);
+
+      /* Visually hidden label helper */
+      const style = document.createElement("style");
+      style.textContent = ".sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}";
+      document.head.appendChild(style);
+
+      initTheme();
+    })();
+  </script>
+</body>
+</html>
