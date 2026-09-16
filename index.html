@@ -672,11 +672,12 @@
     <!-- Start Screen -->
     <section id="startScreen" class="screen active" aria-label="Start">
       <div class="splash">
-        <div class="splash-badge">16 Leadership Principles</div>
+        <div class="splash-badge">LP coaching + STAR practice bank</div>
         <h2>Practice Amazon behavioral interviews with STAR</h2>
         <p class="lede">
-          Answer 5 randomly selected Leadership Principle questions.
-          Get instant heuristic feedback on Situation/Task, Action, and Result.
+          Answer 5 randomly selected questions from Leadership Principle coaching
+          prompts and STAR practice drills. Get feedback tuned to Situation vs Task,
+          specific Actions, and quantified Results.
         </p>
         <button type="button" class="btn btn-primary" id="startBtn">
           Start Mock Interview
@@ -684,18 +685,18 @@
         <div class="feature-row">
           <div class="feature">
             <div class="feature-num">01</div>
-            <h3>Random LP set</h3>
-            <p>Five questions drawn from Amazon’s full Leadership Principles bank.</p>
+            <h3>Coaching + practice bank</h3>
+            <p>Amazon LP prompts plus general behavioral STAR drills in one shuffle.</p>
           </div>
           <div class="feature">
             <div class="feature-num">02</div>
             <h3>STAR structure</h3>
-            <p>Write answers with Situation, Task, Action, and Result in mind.</p>
+            <p>Keep Situation brief, own the Task, make Action the play-by-play, close on Result.</p>
           </div>
           <div class="feature">
             <div class="feature-num">03</div>
-            <h3>Instant scorecard</h3>
-            <p>Heuristic grading highlights missing metrics, ownership, and context.</p>
+            <h3>Coaching-style scorecard</h3>
+            <p>Flags vague actions, blended S/T, “we” language, and missing metrics.</p>
           </div>
         </div>
       </div>
@@ -744,7 +745,7 @@
             <div class="struct-bar"><div class="struct-fill re" id="reFill" style="width:0%"></div></div>
           </div>
         </div>
-        <p class="weight-note">Weights: Situation/Task 25% · Action 40% · Result 35%</p>
+        <p class="weight-note">Weights: Situation/Task 25% · Action 40% (aim for ~60% of your story) · Result 35%</p>
       </div>
 
       <h3 class="results-section-title">Question-by-question feedback</h3>
@@ -765,24 +766,121 @@
     (function () {
       "use strict";
 
-      /* ——— Question bank: ≥1 question per Leadership Principle ——— */
+      /* ——— Question bank: coaching-guide LPs + STAR practice drills + full 16 LPs ——— */
       const QUESTION_BANK = [
+        /* Section: Coaching guide — sample questions by Leadership Principle */
         {
           principle: "Customer Obsession",
-          question: "Tell me about a time you went above and beyond to meet a customer's needs, even when it was difficult or inconvenient."
+          question: "Tell me about a time you went above and beyond for a customer (internal or external)."
+        },
+        {
+          principle: "Customer Obsession",
+          question: "Describe a time you had to make a decision that wasn't popular but was right for the customer."
         },
         {
           principle: "Ownership",
-          question: "Describe a situation where you took ownership of a problem that was outside your formal job description. What did you do?"
+          question: "Tell me about a time you saw a problem and took it upon yourself to fix it, even though it wasn't your responsibility."
+        },
+        {
+          principle: "Ownership",
+          question: "Describe a time you took on something outside your job scope."
+        },
+        {
+          principle: "Dive Deep",
+          question: "Tell me about a time you used data to make a decision or solve a problem."
+        },
+        {
+          principle: "Dive Deep",
+          question: "Describe a situation where you had to dig into the details to find the root cause of an issue."
+        },
+        {
+          principle: "Bias for Action",
+          question: "Tell me about a time you had to make a decision quickly without having all the information."
+        },
+        {
+          principle: "Bias for Action",
+          question: "Describe a time when you took a calculated risk."
+        },
+        {
+          principle: "Deliver Results",
+          question: "Tell me about a time you had a tight deadline and how you managed to deliver."
+        },
+        {
+          principle: "Deliver Results",
+          question: "Describe your most impactful accomplishment at work."
+        },
+        {
+          principle: "Earn Trust",
+          question: "Tell me about a time you received tough feedback and what you did with it."
+        },
+        {
+          principle: "Earn Trust",
+          question: "Describe a time you had to admit a mistake."
         },
         {
           principle: "Invent and Simplify",
-          question: "Give an example of when you invented a new approach or simplified a complex process to improve outcomes."
+          question: "Tell me about a time you found a simpler way to do something."
+        },
+        {
+          principle: "Invent and Simplify",
+          question: "Describe a process you improved or automated."
+        },
+
+        /* Section: STAR practice packet — behavioral drills */
+        {
+          principle: "Have Backbone; Disagree and Commit",
+          question: "Tell me about a situation when you had to convince your manager to take an action that was not very popular. How did you navigate this situation?"
         },
         {
           principle: "Are Right, A Lot",
-          question: "Tell me about a time when you made a decision with incomplete data. How did you ensure you were right?"
+          question: "Tell me about a time you were presented with an ambiguous problem. What was the problem and how did you respond?"
         },
+        {
+          principle: "Dive Deep",
+          question: "Tell me about a time when you had to work with a lot of data to solve a problem. What was the situation and what methodology did you use to solve the problem?"
+        },
+        {
+          principle: "Invent and Simplify",
+          question: "Tell me about a time when you had to simplify complicated data and explain it to team members or stakeholders. What steps did you take to simplify the data and present it in a way your audience could easily understand?"
+        },
+        {
+          principle: "Bias for Action",
+          question: "Describe a time when you had to complete a project in which you were provided with very little information or guidance. How did you approach the situation?"
+        },
+        {
+          principle: "Have Backbone; Disagree and Commit",
+          question: "Tell me about a time when you disagreed with a senior member on the team. How did you approach the situation? What did you learn from the experience?"
+        },
+        {
+          principle: "Earn Trust",
+          question: "Tell me about a time when you had to convince your team to change directions. What was your rationale for changing course and how did you go about convincing them? Were you successful?"
+        },
+        {
+          principle: "Bias for Action",
+          question: "Tell me about a time when you took a risk. What was the risk and how did you arrive at the decision to take it? What was the result of taking that risk? Would you do anything differently if faced with the same situation?"
+        },
+        {
+          principle: "Dive Deep",
+          question: "Tell me about a time when you had to convince other people using data. How did you approach the situation?"
+        },
+        {
+          principle: "Ownership",
+          question: "Tell me about a time when a project, product, or service implementation did not go according to plan. How did you handle the situation?"
+        },
+        {
+          principle: "Earn Trust",
+          question: "Describe a time when you presented a proposal or provided a service that was given an unfavorable response by stakeholders. How did you respond and what did you learn?"
+        },
+        {
+          principle: "Ownership",
+          question: "Tell me about a time when you experienced a major organizational change (for example, a reorganization, a new supervisor, or a new procedure) that created stress. How did you respond?"
+        },
+        {
+          principle: "Think Big",
+          question: "Describe a time when you proposed a major change in your work process or job duties. How did others respond to your proposal? Would you do anything differently?"
+        },
+
+        /* Remaining Leadership Principles so all 16 are covered */
         {
           principle: "Learn and Be Curious",
           question: "Describe a time you taught yourself a new skill or domain to solve a business problem. What was the impact?"
@@ -796,32 +894,8 @@
           question: "Describe a time you refused to settle for 'good enough' and pushed for a higher bar. What changed?"
         },
         {
-          principle: "Think Big",
-          question: "Give an example of when you proposed a bold or ambitious idea. How did you rally support and deliver?"
-        },
-        {
-          principle: "Bias for Action",
-          question: "Tell me about a time you had to act quickly with imperfect information. What did you do and what happened?"
-        },
-        {
           principle: "Frugality",
           question: "Describe a time you accomplished more with less — constrained budget, headcount, or resources. How did you do it?"
-        },
-        {
-          principle: "Earn Trust",
-          question: "Tell me about a time you rebuilt trust after a mistake or disagreement. What steps did you take?"
-        },
-        {
-          principle: "Dive Deep",
-          question: "Give an example of when you dug into the details to find a root cause others had missed. What did you discover?"
-        },
-        {
-          principle: "Have Backbone; Disagree and Commit",
-          question: "Describe a time you disagreed with a decision, voiced your concern, and then committed once a path was chosen."
-        },
-        {
-          principle: "Deliver Results",
-          question: "Tell me about a high-stakes deliverable you owned under a tight deadline. How did you ensure you delivered?"
         },
         {
           principle: "Strive to be Earth's Best Employer",
@@ -833,11 +907,19 @@
         }
       ];
 
-      /* ——— STAR grading heuristics ——— */
+      /* ——— STAR grading heuristics (aligned to coaching guide) ——— */
       const ST_CONTEXT = [
         "project", "client", "customer", "problem", "deadline", "task", "launched",
         "situation", "challenge", "issue", "team", "company", "stakeholder", "goal",
-        "requirement", "crisis", "urgent", "context", "background", "when", "while"
+        "requirement", "crisis", "urgent", "context", "background", "when", "while",
+        "inbound", "outbound", "shift", "manager", "process", "spike", "delay",
+        "working as", "i was", "during", "at my"
+      ];
+
+      const TASK_MARKERS = [
+        "my task", "my responsibility", "i needed to", "i had to", "i took it on",
+        "i took on", "i was responsible", "my role", "i owned", "assigned to me",
+        "i set out to", "my goal was", "i was asked to"
       ];
 
       const ACTION_PHRASES = [
@@ -845,14 +927,24 @@
         "i created", "i built", "i developed", "i managed", "i coordinated",
         "i negotiated", "i proposed", "i drove", "i owned", "i delivered",
         "i improved", "i resolved", "i identified", "i prioritized", "i facilitated",
-        "i launched", "i established", "i redefined", "i measured", "i communicated"
+        "i launched", "i established", "i redefined", "i measured", "i communicated",
+        "i scanned", "i alerted", "i pulled", "i found", "i confirmed",
+        "i escalated", "i investigated", "i checked", "i used", "i went",
+        "i separated", "i downstacked", "i messaged", "i called", "i built a"
+      ];
+
+      const SPECIFICITY_MARKERS = [
+        "tool", "system", "report", "data", "label", "scan", "root cause",
+        "standup", "message", "email", "dashboard", "metric", "process",
+        "step", "first", "then", "next", "because", "using", "specifically"
       ];
 
       const RESULT_MARKERS = [
         "%", "percent", "percentage", "increased by", "decreased by", "reduced by",
         "saved", "days", "weeks", "months", "hours", "$", "revenue", "cost",
         "roi", "nps", "metric", "kpi", "from ", " to ", "grew", "boosted",
-        "cut", "eliminated", "achieved", "resulted in", "outcome"
+        "cut", "eliminated", "achieved", "resulted in", "outcome", "cases",
+        "units", "prevented", "dropped from", "within", "per week", "per day"
       ];
 
       function escapeHtml(str) {
@@ -902,6 +994,7 @@
       /**
        * Grade one answer 0–100.
        * Situation/Task 25%, Action 40%, Result 35%.
+       * Heuristics mirror coaching guide: brief S, distinct T, specific A with "I", quantified R.
        */
       function gradeAnswer(answer) {
         const trimmed = (answer || "").trim();
@@ -914,81 +1007,92 @@
             action: 0,
             result: 0,
             feedback: [
-              { type: "error", text: "Answer too short to evaluate. Aim for a full STAR story (Situation, Task, Action, Result)." }
+              { type: "error", text: "Answer too short to evaluate. Aim for a 2–3 minute STAR story with Situation, Task, Action, and Result." }
             ]
           };
         }
 
-        /* Situation / Task (0–100 component) */
+        /* Situation / Task (0–100) — context + personal Task beat */
         const stMatch = countMatches(trimmed, ST_CONTEXT);
-        let st = Math.min(100, stMatch.hits * 18);
-        if (trimmed.length > 120) st = Math.min(100, st + 10);
+        const taskMatch = countMatches(trimmed, TASK_MARKERS);
+        let st = Math.min(70, stMatch.hits * 14);
+        if (taskMatch.hits > 0) st = Math.min(100, st + 25);
+        else st = Math.min(100, st + 5);
+        if (trimmed.length > 120) st = Math.min(100, st + 8);
+
         if (stMatch.hits === 0) {
           feedback.push({
             type: "error",
-            text: "Missing descriptive context in Situation/Task (e.g., project, client, problem, deadline, task)."
+            text: "Situation is too vague — set the scene in 2–3 sentences so someone outside your workplace can picture it."
+          });
+        } else if (taskMatch.hits === 0) {
+          feedback.push({
+            type: "warning",
+            text: "Situation and Task look blended. Separate them: Situation = what was happening; Task = your specific responsibility (\"I needed to…\" / \"I took it on…\")."
           });
         } else if (st < 60) {
           feedback.push({
             type: "warning",
-            text: "Situation/Task is thin — add more context about the problem, stakeholders, or constraints."
+            text: "Situation/Task is thin — add brief context, then a clear personal Task beat."
           });
         } else {
           feedback.push({
             type: "success",
-            text: "Solid Situation/Task context detected."
+            text: "Solid Situation context with a distinct personal Task."
           });
         }
 
-        /* Action (0–100 component) */
+        /* Action (0–100) — play-by-play, "I" not "we", specificity */
         const actionMatch = countMatches(trimmed, ACTION_PHRASES);
+        const specMatch = countMatches(trimmed, SPECIFICITY_MARKERS);
         const iCount = countFirstPersonI(trimmed);
         const weCount = countWe(trimmed);
-        let action = Math.min(100, actionMatch.hits * 22 + Math.min(iCount, 5) * 8);
+        let action = Math.min(100, actionMatch.hits * 16 + Math.min(iCount, 6) * 6 + Math.min(specMatch.hits, 4) * 6);
+
         if (weCount > iCount && iCount < 2) {
-          action = Math.max(0, action - 25);
+          action = Math.max(0, action - 30);
           feedback.push({
             type: "error",
-            text: "Action section leans on \"we\" — Amazon interviewers want clear \"I\" ownership (e.g., \"I designed\", \"I led\")."
+            text: "Too much \"we,\" not enough \"I.\" Say what you personally did (e.g., \"I pulled the data, found the cause, and coordinated the fix\")."
           });
         } else if (actionMatch.hits === 0 && iCount < 2) {
           feedback.push({
             type: "error",
-            text: "Missing strong first-person Action verbs. Use phrases like \"I implemented\", \"I analyzed\", \"I decided\"."
+            text: "Actions are missing. This should be ~60% of your answer — name specific steps, tools, systems, and decisions."
           });
-        } else if (action < 60) {
+        } else if (specMatch.hits < 2 || action < 55) {
           feedback.push({
             type: "warning",
-            text: "Action could be stronger — spell out specific steps you personally took."
+            text: "Action is too vague — interviewer wants the play-by-play. What exactly did you check, which tool, what root cause, and how did you communicate?"
           });
         } else {
           feedback.push({
             type: "success",
-            text: "Clear personal Action and ownership language detected."
+            text: "Clear personal Action with useful specificity."
           });
         }
         action = Math.max(0, Math.min(100, action));
 
-        /* Result (0–100 component) */
+        /* Result (0–100) — require numbers */
         const resultMatch = countMatches(trimmed, RESULT_MARKERS);
-        let result = Math.min(100, resultMatch.hits * 20);
-        if (hasNumber(trimmed)) result = Math.min(100, result + 25);
+        let result = Math.min(100, resultMatch.hits * 16);
+        if (hasNumber(trimmed)) result = Math.min(100, result + 30);
         if (/\$/.test(trimmed) || /%/.test(trimmed)) result = Math.min(100, result + 15);
 
         if (resultMatch.hits === 0 && !hasNumber(trimmed)) {
           feedback.push({
             type: "error",
-            text: "Missing quantifiable metrics in the Result section (numbers, %, $, timeframes, or impact verbs like \"saved\" / \"increased by\")."
+            text: "Missing quantifiable metrics in the Result. Attach numbers: cases/units, hours saved, %, $, or before→after impact. Even rough estimates beat \"a lot.\""
           });
-        } else if (result < 60) {
+        } else if (!hasNumber(trimmed) || result < 60) {
           feedback.push({
             type: "warning",
-            text: "Result needs clearer metrics — quantify the before/after impact where possible."
+            text: "Result needs concrete numbers — at least 1–2 metrics (e.g., \"~200 cases\" or \"saved ~15 hours/week\")."
           });
         } else {
           feedback.push({
             type: "success",
-            text: "Quantifiable Result indicators found."
+            text: "Quantified Result indicators found."
           });
         }
         result = Math.max(0, Math.min(100, result));
@@ -1059,10 +1163,10 @@
               '<span class="principle-tag">' + escapeHtml(q.principle) + "</span>" +
             "</div>" +
             '<p class="q-text">' + escapeHtml(q.question) + "</p>" +
-            '<p class="star-hint"><strong>STAR tip:</strong> Situation → Task → Action (\"I…\") → Result (with metrics)</p>' +
+            '<p class="star-hint"><strong>STAR tip:</strong> Brief Situation (2–3 sentences) → your Task → Action play-by-play with \"I\" (~60%) → Result with numbers</p>' +
             '<label class="sr-only" for="answer-' + i + '">Your answer</label>' +
             '<textarea id="answer-' + i + '" name="answer-' + i + '" rows="6" ' +
-              'placeholder="Describe the Situation and Task, the Actions you took (I…), and the measurable Result…" ' +
+              'placeholder="Situation (brief context)… Task (I needed to…)… Action (specific steps/tools I used…)… Result (numbers: cases, hours, %, $)…" ' +
               'required></textarea>' +
             '<div class="char-count" id="count-' + i + '">0 characters</div>';
           questionsContainer.appendChild(card);

@@ -20,10 +20,10 @@ python3 -m http.server 8080
 
 ## Features
 
-- **16 Leadership Principles** question bank (at least one behavioral question each)
+- **Coaching + practice question bank** — Leadership Principle prompts from the STAR coaching guide, behavioral drills from the practice packet, and coverage of all 16 LPs
 - **5 random questions** per mock interview
-- **STAR heuristic grading** (Situation/Task 25%, Action 40%, Result 35%)
-- **Scorecard dashboard** with per-question feedback and missing-structure alerts
+- **Coaching-aligned STAR grading** (Situation/Task 25%, Action 40%, Result 35%) — flags vague actions, blended S/T, “we” language, and missing numbers
+- **Scorecard dashboard** with per-question feedback
 - **Dark / light theme** toggle (enterprise slate + corporate blue)
 
 ## Stack
