@@ -1,0 +1,1720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Valhomies Construction Builder ver. 1</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --wood-deep: #1a120c;
+      --wood-mid: #2a1c12;
+      --wood-panel: #3a2818;
+      --wood-edge: #5c3d22;
+      --slate: #2c3238;
+      --slate-light: #3d4650;
+      --slate-border: #5a6570;
+      --amber: #e8a040;
+      --amber-glow: #ffb84d;
+      --ember: #c45c1a;
+      --cream: #e8dcc8;
+      --muted: #a89880;
+      --success: #6a9a5a;
+      --danger-smoke: #8b3a2a;
+      --grid-floor: #243018;
+      --shadow: rgba(0, 0, 0, 0.55);
+      --radius: 6px;
+      --font-display: "Cinzel", "Palatino Linotype", serif;
+      --font-body: "Source Sans 3", "Segoe UI", sans-serif;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font-body);
+      color: var(--cream);
+      background:
+        radial-gradient(ellipse 120% 80% at 50% -20%, rgba(232, 160, 64, 0.12), transparent 55%),
+        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(60, 40, 20, 0.5), transparent),
+        linear-gradient(165deg, #0e0a08 0%, var(--wood-deep) 35%, #12100e 70%, #0a0806 100%);
+      background-attachment: fixed;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.07;
+      background-image:
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 3px,
+          rgba(80, 50, 25, 0.4) 3px,
+          rgba(80, 50, 25, 0.4) 4px
+        ),
+        repeating-linear-gradient(
+          0deg,
+          transparent,
+          transparent 48px,
+          rgba(0, 0, 0, 0.15) 48px,
+          rgba(0, 0, 0, 0.15) 50px
+        );
+      z-index: 0;
+    }
+
+    .app {
+      position: relative;
+      z-index: 1;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 1.25rem 1.25rem 3rem;
+    }
+
+    /* —— Hero —— */
+    .hero {
+      text-align: center;
+      padding: 2.5rem 1rem 2rem;
+      margin-bottom: 1.75rem;
+      position: relative;
+      animation: fadeRise 0.8s ease-out both;
+    }
+
+    .hero::after {
+      content: "";
+      display: block;
+      width: min(420px, 70%);
+      height: 2px;
+      margin: 1.5rem auto 0;
+      background: linear-gradient(90deg, transparent, var(--amber), transparent);
+      box-shadow: 0 0 12px rgba(232, 160, 64, 0.45);
+    }
+
+    .brand {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: clamp(1.85rem, 5vw, 3rem);
+      letter-spacing: 0.04em;
+      line-height: 1.15;
+      margin: 0;
+      color: var(--amber-glow);
+      text-shadow:
+        0 0 24px rgba(232, 160, 64, 0.35),
+        0 2px 0 #3a2008,
+        0 4px 12px var(--shadow);
+    }
+
+    .brand span {
+      display: block;
+      font-size: 0.42em;
+      font-weight: 500;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 0.55rem;
+      text-shadow: none;
+    }
+
+    .tagline {
+      margin: 1rem auto 0;
+      max-width: 36rem;
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    /* —— Panels —— */
+    .panel {
+      background:
+        linear-gradient(145deg, rgba(58, 40, 24, 0.92), rgba(42, 28, 18, 0.95)),
+        var(--wood-panel);
+      border: 1px solid var(--wood-edge);
+      border-radius: var(--radius);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 200, 120, 0.08),
+        0 8px 28px var(--shadow);
+      padding: 1.25rem 1.35rem;
+      margin-bottom: 1.35rem;
+      animation: fadeRise 0.7s ease-out both;
+    }
+
+    .panel:nth-of-type(2) { animation-delay: 0.08s; }
+    .panel:nth-of-type(3) { animation-delay: 0.14s; }
+    .panel:nth-of-type(4) { animation-delay: 0.2s; }
+    .panel:nth-of-type(5) { animation-delay: 0.26s; }
+
+    .panel-slate {
+      background:
+        linear-gradient(160deg, rgba(52, 58, 66, 0.95), rgba(36, 40, 46, 0.98)),
+        var(--slate);
+      border-color: var(--slate-border);
+    }
+
+    .panel h2 {
+      font-family: var(--font-display);
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      margin: 0 0 1rem;
+      color: var(--amber);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .panel h2::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      background: var(--amber);
+      box-shadow: 0 0 10px var(--amber-glow);
+      transform: rotate(45deg);
+      flex-shrink: 0;
+    }
+
+    /* —— Controls —— */
+    .controls-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+    }
+
+    @media (max-width: 720px) {
+      .controls-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .field label {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.4rem;
+    }
+
+    .field select {
+      width: 100%;
+      appearance: none;
+      background: var(--wood-deep) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23e8a040' d='M6 8L0 0h12z'/%3E%3C/svg%3E") right 0.85rem center / 10px no-repeat;
+      color: var(--cream);
+      border: 1px solid var(--wood-edge);
+      border-radius: var(--radius);
+      padding: 0.7rem 2.2rem 0.7rem 0.9rem;
+      font-family: var(--font-body);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .field select:hover,
+    .field select:focus {
+      outline: none;
+      border-color: var(--amber);
+      box-shadow: 0 0 0 2px rgba(232, 160, 64, 0.2);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.9rem;
+      letter-spacing: 0.06em;
+      border: none;
+      border-radius: var(--radius);
+      padding: 0.85rem 1.4rem;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.2s, background 0.2s;
+    }
+
+    .btn:active {
+      transform: translateY(1px);
+    }
+
+    .btn-primary {
+      background: linear-gradient(180deg, var(--amber-glow), var(--ember));
+      color: #1a1008;
+      box-shadow:
+        0 0 20px rgba(232, 160, 64, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      flex: 1 1 200px;
+    }
+
+    .btn-primary:hover {
+      box-shadow:
+        0 0 28px rgba(255, 184, 77, 0.5),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--slate);
+      color: var(--cream);
+      border: 1px solid var(--slate-border);
+      flex: 1 1 180px;
+    }
+
+    .btn-secondary:hover {
+      background: var(--slate-light);
+      border-color: var(--amber);
+    }
+
+    .btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* —— Layout split —— */
+    .workspace {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 1.35rem;
+      align-items: start;
+    }
+
+    @media (max-width: 960px) {
+      .workspace {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* —— Canvas / Grid —— */
+    .blueprint-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    #blueprintCanvas {
+      width: 100%;
+      max-width: 520px;
+      aspect-ratio: 1;
+      background: #152010;
+      border: 2px solid var(--wood-edge);
+      border-radius: var(--radius);
+      box-shadow:
+        inset 0 0 40px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(232, 160, 64, 0.15);
+      image-rendering: pixelated;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.65rem 1.1rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 2.5rem 1rem;
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .empty-state strong {
+      color: var(--amber);
+      font-family: var(--font-display);
+    }
+
+    /* —— Wiki link —— */
+    .wiki-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 1.45rem;
+      height: 1.45rem;
+      border-radius: 3px;
+      background: rgba(232, 160, 64, 0.12);
+      border: 1px solid rgba(232, 160, 64, 0.35);
+      text-decoration: none;
+      font-size: 0.75rem;
+      line-height: 1;
+      transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+      vertical-align: middle;
+      flex-shrink: 0;
+    }
+
+    .wiki-link:hover {
+      background: rgba(232, 160, 64, 0.28);
+      box-shadow: 0 0 8px rgba(232, 160, 64, 0.4);
+      transform: scale(1.08);
+    }
+
+    .wiki-link:focus-visible {
+      outline: 2px solid var(--amber);
+      outline-offset: 2px;
+    }
+
+    /* —— Shopping list —— */
+    .shop-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    @media (max-width: 480px) {
+      .shop-meta {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .stat-chip {
+      background: var(--wood-deep);
+      border: 1px solid var(--wood-edge);
+      border-radius: var(--radius);
+      padding: 0.75rem 1rem;
+      text-align: center;
+    }
+
+    .stat-chip .value {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      color: var(--amber-glow);
+      line-height: 1.2;
+    }
+
+    .stat-chip .label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      margin-top: 0.2rem;
+    }
+
+    .material-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .material-list li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.65rem 0.5rem;
+      border-bottom: 1px solid rgba(92, 61, 34, 0.45);
+    }
+
+    .material-list li:last-child {
+      border-bottom: none;
+    }
+
+    .mat-name {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-weight: 600;
+    }
+
+    .mat-qty {
+      font-variant-numeric: tabular-nums;
+      color: var(--amber);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .mat-stacks {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-weight: 400;
+      margin-left: 0.35rem;
+    }
+
+    /* —— Manual —— */
+    .phase {
+      margin-bottom: 1.25rem;
+      border: 1px solid var(--slate-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: rgba(20, 24, 28, 0.55);
+    }
+
+    .phase-header {
+      background: linear-gradient(90deg, rgba(232, 160, 64, 0.18), transparent);
+      border-bottom: 1px solid var(--slate-border);
+      padding: 0.7rem 1rem;
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      color: var(--amber-glow);
+      letter-spacing: 0.04em;
+    }
+
+    .step {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.65rem 0.85rem;
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid rgba(90, 101, 112, 0.35);
+      transition: background 0.2s;
+    }
+
+    .step:last-child {
+      border-bottom: none;
+    }
+
+    .step.done {
+      background: rgba(106, 154, 90, 0.08);
+    }
+
+    .step.done .step-body {
+      text-decoration: line-through;
+      opacity: 0.55;
+    }
+
+    .step input[type="checkbox"] {
+      width: 1.15rem;
+      height: 1.15rem;
+      margin-top: 0.15rem;
+      accent-color: var(--amber);
+      cursor: pointer;
+    }
+
+    .step-title {
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .step-desc {
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.45;
+      margin-bottom: 0.45rem;
+    }
+
+    .step-mats {
+      font-size: 0.85rem;
+      color: var(--cream);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem 0.75rem;
+    }
+
+    .step-mats .mat-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 0.2rem 0.45rem;
+      border-radius: 3px;
+      border: 1px solid rgba(92, 61, 34, 0.5);
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%) translateY(120%);
+      background: var(--slate);
+      border: 1px solid var(--amber);
+      color: var(--cream);
+      padding: 0.75rem 1.25rem;
+      border-radius: var(--radius);
+      box-shadow: 0 8px 24px var(--shadow), 0 0 16px rgba(232, 160, 64, 0.25);
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      z-index: 100;
+      opacity: 0;
+      transition: transform 0.35s ease, opacity 0.35s ease;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--muted);
+      opacity: 0.7;
+      margin-top: 0.5rem;
+    }
+
+    @keyframes fadeRise {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header class="hero">
+      <h1 class="brand">
+        Valhomies Construction Builder
+        <span>ver. 1</span>
+      </h1>
+      <p class="tagline">
+        External blueprint helper for Viking builders — no game files or mods required.
+        Design, gather, and raise halls worthy of Odin.
+      </p>
+    </header>
+
+    <!-- 1. Architect Controls -->
+    <section class="panel" aria-labelledby="controls-heading">
+      <h2 id="controls-heading">Architect Controls &amp; Designer Brain</h2>
+      <div class="controls-grid">
+        <div class="field">
+          <label for="buildingType">
+            Building Type
+            <a class="wiki-link" id="buildingWiki" href="#" target="_blank" rel="noopener noreferrer" title="Open on Valheim Wiki" aria-label="Valheim Wiki for building type">🔗</a>
+          </label>
+          <select id="buildingType">
+            <option value="Survival Cabin">Survival Cabin</option>
+            <option value="Viking Longhouse">Viking Longhouse</option>
+            <option value="Defensive Watchtower">Defensive Watchtower</option>
+            <option value="Crafting Hub">Crafting Hub</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="primaryMaterial">Primary Material</label>
+          <select id="primaryMaterial">
+            <option value="Basic Wood">Basic Wood</option>
+            <option value="Core Wood">Core Wood</option>
+            <option value="Stone">Stone</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="scale">Scale</label>
+          <select id="scale">
+            <option value="Compact">Compact (8×8)</option>
+            <option value="Standard" selected>Standard (12×12)</option>
+            <option value="Grand">Grand (16×16)</option>
+          </select>
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" class="btn btn-primary" id="generateBtn">Generate Blueprint</button>
+        <button type="button" class="btn btn-secondary" id="copyBtn" disabled>Copy Steps to Clipboard</button>
+      </div>
+    </section>
+
+    <div class="workspace">
+      <!-- 2. Visual Grid -->
+      <section class="panel panel-slate" aria-labelledby="map-heading">
+        <h2 id="map-heading">Visual 2D Grid Blueprint Map</h2>
+        <div class="blueprint-wrap">
+          <canvas id="blueprintCanvas" width="512" height="512" aria-label="Floor plan blueprint grid"></canvas>
+          <div class="legend" id="legend" hidden>
+            <span>🧱 Wall</span>
+            <span>🚪 Door</span>
+            <span>🔥 Hearth</span>
+            <span>📦 Chest</span>
+            <span>🛏️ Bed</span>
+            <span>🌀 Portal</span>
+            <span>🛠️ Craft</span>
+            <span>· Floor</span>
+          </div>
+          <p class="empty-state" id="mapEmpty">
+            Choose your hall, material, and scale — then strike
+            <strong>Generate Blueprint</strong> to raise the floor plan.
+          </p>
+        </div>
+      </section>
+
+      <!-- 4. Shopping List -->
+      <section class="panel" aria-labelledby="shop-heading">
+        <h2 id="shop-heading">Total Gathering Shopping List</h2>
+        <div id="shopEmpty" class="empty-state">
+          Materials appear here after you generate a blueprint.
+        </div>
+        <div id="shopContent" hidden>
+          <div class="shop-meta">
+            <div class="stat-chip">
+              <div class="value" id="fullStacksTotal">0</div>
+              <div class="label">Full Stacks (÷50)</div>
+            </div>
+            <div class="stat-chip">
+              <div class="value" id="inventorySlots">0</div>
+              <div class="label">Inventory Slots Needed</div>
+            </div>
+          </div>
+          <ul class="material-list" id="materialList"></ul>
+        </div>
+      </section>
+    </div>
+
+    <!-- 5. Construction Manual -->
+    <section class="panel panel-slate" aria-labelledby="manual-heading">
+      <h2 id="manual-heading">Step-by-Step Construction Manual</h2>
+      <div id="manualEmpty" class="empty-state">
+        Generate a blueprint to unlock the four-phase building guide.
+      </div>
+      <div id="manualContent" hidden></div>
+    </section>
+
+    <p class="footer-note">
+      Valhomies Construction Builder ver. 1 · Unofficial external helper · Wiki links open valheim.wiki
+    </p>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    (function () {
+      "use strict";
+
+      /* —— Constants —— */
+      const STACK_SIZE = 50;
+      const WIKI_BASE = "https://valheim.wiki";
+
+      const SCALE_SIZE = {
+        Compact: 8,
+        Standard: 12,
+        Grand: 16,
+      };
+
+      const CELL = {
+        EMPTY: 0,
+        FLOOR: 1,
+        WALL: 2,
+        DOOR: 3,
+        HEARTH: 4,
+        CHEST: 5,
+        BED: 6,
+        PORTAL: 7,
+        CRAFT: 8,
+      };
+
+      const CELL_EMOJI = {
+        [CELL.FLOOR]: "",
+        [CELL.WALL]: "🧱",
+        [CELL.DOOR]: "🚪",
+        [CELL.HEARTH]: "🔥",
+        [CELL.CHEST]: "📦",
+        [CELL.BED]: "🛏️",
+        [CELL.PORTAL]: "🌀",
+        [CELL.CRAFT]: "🛠️",
+      };
+
+      /** Map UI labels → wiki article titles when they differ */
+      const WIKI_ALIASES = {
+        "Basic Wood": "Wood",
+        "Survival Cabin": "Building",
+        "Viking Longhouse": "Longhouse",
+        "Defensive Watchtower": "Building",
+        "Crafting Hub": "Crafting",
+        "Deer Hide": "Deer_hide",
+        "Surtling Cores": "Surtling_core",
+        "Fine Wood": "Fine_wood",
+        "Core Wood": "Core_wood",
+        "Thatch Roof": "Roof",
+        Wood: "Wood",
+        Stone: "Stone",
+        Resin: "Resin",
+        Flint: "Flint",
+        "Iron Nails": "Iron_nails",
+        Greydwarf: "Greydwarf",
+      };
+
+      /* —— DOM —— */
+      const buildingTypeEl = document.getElementById("buildingType");
+      const primaryMaterialEl = document.getElementById("primaryMaterial");
+      const scaleEl = document.getElementById("scale");
+      const buildingWikiEl = document.getElementById("buildingWiki");
+      const generateBtn = document.getElementById("generateBtn");
+      const copyBtn = document.getElementById("copyBtn");
+      const canvas = document.getElementById("blueprintCanvas");
+      const ctx = canvas.getContext("2d");
+      const legend = document.getElementById("legend");
+      const mapEmpty = document.getElementById("mapEmpty");
+      const shopEmpty = document.getElementById("shopEmpty");
+      const shopContent = document.getElementById("shopContent");
+      const materialListEl = document.getElementById("materialList");
+      const fullStacksTotalEl = document.getElementById("fullStacksTotal");
+      const inventorySlotsEl = document.getElementById("inventorySlots");
+      const manualEmpty = document.getElementById("manualEmpty");
+      const manualContent = document.getElementById("manualContent");
+      const toastEl = document.getElementById("toast");
+
+      let currentBlueprint = null;
+
+      /* —— Wiki helpers —— */
+      function sanitizeWikiSlug(name) {
+        const alias = WIKI_ALIASES[name];
+        const raw = alias || name;
+        return String(raw)
+          .trim()
+          .replace(/\s+/g, "_")
+          .replace(/_+/g, "_");
+      }
+
+      function wikiUrl(name) {
+        return WIKI_BASE + "/" + sanitizeWikiSlug(name);
+      }
+
+      function wikiAnchor(name, extraClass) {
+        const a = document.createElement("a");
+        a.className = "wiki-link" + (extraClass ? " " + extraClass : "");
+        a.href = wikiUrl(name);
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.title = "Open \"" + name + "\" on Valheim Wiki";
+        a.setAttribute("aria-label", "Valheim Wiki: " + name);
+        a.textContent = "🔗";
+        a.addEventListener("click", function (e) {
+          e.stopPropagation();
+        });
+        return a;
+      }
+
+      function updateBuildingWikiLink() {
+        const name = buildingTypeEl.value;
+        buildingWikiEl.href = wikiUrl(name);
+        buildingWikiEl.title = "Open \"" + name + "\" on Valheim Wiki";
+      }
+
+      /* —— Procedural floor plan —— */
+      function createGrid(n) {
+        const g = [];
+        for (let y = 0; y < n; y++) {
+          g[y] = [];
+          for (let x = 0; x < n; x++) g[y][x] = CELL.EMPTY;
+        }
+        return g;
+      }
+
+      function inBounds(g, x, y) {
+        return y >= 0 && y < g.length && x >= 0 && x < g[0].length;
+      }
+
+      function neighbors8(g, x, y) {
+        const out = [];
+        for (let dy = -1; dy <= 1; dy++) {
+          for (let dx = -1; dx <= 1; dx++) {
+            if (dx === 0 && dy === 0) continue;
+            const nx = x + dx;
+            const ny = y + dy;
+            if (inBounds(g, nx, ny)) out.push({ x: nx, y: ny, v: g[ny][nx] });
+          }
+        }
+        return out;
+      }
+
+      function isPerimeter(n, x, y) {
+        return x === 0 || y === 0 || x === n - 1 || y === n - 1;
+      }
+
+      function generateFloorPlan(buildingType, scaleName) {
+        const n = SCALE_SIZE[scaleName];
+        const grid = createGrid(n);
+
+        // Floors everywhere inside perimeter
+        for (let y = 0; y < n; y++) {
+          for (let x = 0; x < n; x++) {
+            grid[y][x] = isPerimeter(n, x, y) ? CELL.WALL : CELL.FLOOR;
+          }
+        }
+
+        // Door placement — south edge for cabin/longhouse, east for tower, dual for hub
+        const doors = [];
+        if (buildingType === "Defensive Watchtower") {
+          const mid = Math.floor(n / 2);
+          doors.push({ x: n - 1, y: mid });
+          if (n >= 12) doors.push({ x: 0, y: mid });
+        } else if (buildingType === "Crafting Hub") {
+          const mid = Math.floor(n / 2);
+          doors.push({ x: mid, y: n - 1 });
+          doors.push({ x: mid, y: 0 });
+          if (n >= 12) doors.push({ x: n - 1, y: mid });
+        } else if (buildingType === "Viking Longhouse") {
+          const mid = Math.floor(n / 2);
+          doors.push({ x: mid, y: n - 1 });
+          if (n >= 12) doors.push({ x: mid - 2, y: n - 1 }, { x: mid + 2, y: n - 1 });
+        } else {
+          // Survival Cabin — single south door
+          doors.push({ x: Math.floor(n / 2), y: n - 1 });
+        }
+
+        doors.forEach(function (d) {
+          if (inBounds(grid, d.x, d.y)) grid[d.y][d.x] = CELL.DOOR;
+        });
+
+        // Optional internal partition for larger halls
+        if (buildingType === "Viking Longhouse" && n >= 12) {
+          const split = Math.floor(n * 0.35);
+          for (let y = 1; y < n - 1; y++) {
+            if (y === Math.floor(n / 2)) continue; // doorway in partition
+            grid[y][split] = CELL.WALL;
+          }
+        }
+
+        if (buildingType === "Defensive Watchtower" && n >= 12) {
+          // Inner keep ring
+          const inset = 2;
+          for (let y = inset; y < n - inset; y++) {
+            for (let x = inset; x < n - inset; x++) {
+              if (x === inset || y === inset || x === n - inset - 1 || y === n - inset - 1) {
+                if (grid[y][x] === CELL.FLOOR) grid[y][x] = CELL.WALL;
+              }
+            }
+          }
+          // Keep door on south of inner ring
+          const mid = Math.floor(n / 2);
+          grid[n - inset - 1][mid] = CELL.DOOR;
+        }
+
+        // Hearth — center-ish with 1-tile clearance (no walls/furniture in 3×3)
+        let hx = Math.floor(n / 2);
+        let hy = Math.floor(n / 2) - (buildingType === "Viking Longhouse" ? 1 : 0);
+        if (buildingType === "Defensive Watchtower") {
+          hx = Math.floor(n / 2);
+          hy = Math.floor(n / 2);
+        }
+        // Ensure hearth is on floor and clear neighbors
+        function clearForHearth(cx, cy) {
+          for (let dy = -1; dy <= 1; dy++) {
+            for (let dx = -1; dx <= 1; dx++) {
+              const nx = cx + dx;
+              const ny = cy + dy;
+              if (!inBounds(grid, nx, ny)) return false;
+              const v = grid[ny][nx];
+              if (v === CELL.WALL || v === CELL.DOOR) return false;
+            }
+          }
+          return true;
+        }
+
+        // Nudge hearth if needed
+        const candidates = [
+          [hx, hy],
+          [hx - 1, hy],
+          [hx + 1, hy],
+          [hx, hy - 1],
+          [hx, hy + 1],
+          [Math.floor(n / 2), Math.floor(n / 2)],
+        ];
+        let placed = false;
+        for (let i = 0; i < candidates.length; i++) {
+          const cx = candidates[i][0];
+          const cy = candidates[i][1];
+          if (clearForHearth(cx, cy)) {
+            hx = cx;
+            hy = cy;
+            placed = true;
+            break;
+          }
+        }
+        if (!placed) {
+          hx = Math.max(2, Math.min(n - 3, hx));
+          hy = Math.max(2, Math.min(n - 3, hy));
+          for (let dy = -1; dy <= 1; dy++) {
+            for (let dx = -1; dx <= 1; dx++) {
+              const nx = hx + dx;
+              const ny = hy + dy;
+              if (inBounds(grid, nx, ny) && grid[ny][nx] !== CELL.DOOR) {
+                grid[ny][nx] = CELL.FLOOR;
+              }
+            }
+          }
+        }
+        grid[hy][hx] = CELL.HEARTH;
+
+        // Beds — comfort corner (NW for most; NE for tower)
+        const bedCorner =
+          buildingType === "Defensive Watchtower"
+            ? { x: n - 3, y: 2 }
+            : { x: 2, y: 2 };
+        const bedCount =
+          buildingType === "Viking Longhouse"
+            ? Math.max(2, Math.floor(n / 4))
+            : buildingType === "Survival Cabin"
+              ? 1
+              : buildingType === "Crafting Hub"
+                ? 1
+                : 2;
+
+        let bedsPlaced = 0;
+        for (let i = 0; i < bedCount + 4 && bedsPlaced < bedCount; i++) {
+          const bx = bedCorner.x + (i % 2);
+          const by = bedCorner.y + Math.floor(i / 2);
+          if (
+            inBounds(grid, bx, by) &&
+            grid[by][bx] === CELL.FLOOR &&
+            !nearHearth(bx, by, hx, hy)
+          ) {
+            grid[by][bx] = CELL.BED;
+            bedsPlaced++;
+          }
+        }
+
+        // Chests — against structural walls
+        const chestCount =
+          buildingType === "Crafting Hub"
+            ? Math.max(4, Math.floor(n / 2))
+            : buildingType === "Survival Cabin"
+              ? 2
+              : Math.max(3, Math.floor(n / 3));
+
+        let chestsPlaced = 0;
+        // Prefer cells adjacent to walls
+        for (let y = 1; y < n - 1 && chestsPlaced < chestCount; y++) {
+          for (let x = 1; x < n - 1 && chestsPlaced < chestCount; x++) {
+            if (grid[y][x] !== CELL.FLOOR) continue;
+            if (nearHearth(x, y, hx, hy)) continue;
+            const adjWall = neighbors8(grid, x, y).some(function (c) {
+              return c.v === CELL.WALL;
+            });
+            if (!adjWall) continue;
+            // Skip bed corner crowding for cabin
+            if (Math.abs(x - bedCorner.x) + Math.abs(y - bedCorner.y) < 2) continue;
+            // Space chests along walls — every other cell-ish
+            if ((x + y) % 2 !== 0 && chestsPlaced > 0) continue;
+            grid[y][x] = CELL.CHEST;
+            chestsPlaced++;
+          }
+        }
+
+        // Craft stations & portal for Crafting Hub / Longhouse
+        if (buildingType === "Crafting Hub" || buildingType === "Viking Longhouse") {
+          placeUtility(grid, CELL.CRAFT, hx, hy, n);
+          if (n >= 10) placeUtility(grid, CELL.PORTAL, hx, hy, n);
+        }
+        if (buildingType === "Crafting Hub") {
+          placeUtility(grid, CELL.CRAFT, hx, hy, n);
+        }
+
+        return {
+          grid: grid,
+          size: n,
+          hearth: { x: hx, y: hy },
+          doors: doors,
+          counts: countCells(grid),
+        };
+      }
+
+      function nearHearth(x, y, hx, hy) {
+        return Math.abs(x - hx) <= 1 && Math.abs(y - hy) <= 1;
+      }
+
+      function placeUtility(grid, type, hx, hy, n) {
+        // Place opposite bed corner, against wall if possible
+        for (let y = n - 3; y >= 1; y--) {
+          for (let x = n - 3; x >= 1; x--) {
+            if (grid[y][x] !== CELL.FLOOR) continue;
+            if (nearHearth(x, y, hx, hy)) continue;
+            const adjWall = neighbors8(grid, x, y).some(function (c) {
+              return c.v === CELL.WALL;
+            });
+            if (adjWall || type === CELL.PORTAL) {
+              grid[y][x] = type;
+              return true;
+            }
+          }
+        }
+        return false;
+      }
+
+      function countCells(grid) {
+        const c = {
+          floor: 0,
+          wall: 0,
+          door: 0,
+          hearth: 0,
+          chest: 0,
+          bed: 0,
+          portal: 0,
+          craft: 0,
+        };
+        for (let y = 0; y < grid.length; y++) {
+          for (let x = 0; x < grid[y].length; x++) {
+            switch (grid[y][x]) {
+              case CELL.FLOOR:
+                c.floor++;
+                break;
+              case CELL.WALL:
+                c.wall++;
+                break;
+              case CELL.DOOR:
+                c.door++;
+                break;
+              case CELL.HEARTH:
+                c.hearth++;
+                break;
+              case CELL.CHEST:
+                c.chest++;
+                break;
+              case CELL.BED:
+                c.bed++;
+                break;
+              case CELL.PORTAL:
+                c.portal++;
+                break;
+              case CELL.CRAFT:
+                c.craft++;
+                break;
+            }
+          }
+        }
+        // Floors include cells under furniture for foundation costing
+        c.floorTiles =
+          c.floor + c.hearth + c.chest + c.bed + c.portal + c.craft;
+        return c;
+      }
+
+      /* —— Material calculation —— */
+      function materialKey(primary) {
+        if (primary === "Basic Wood") return "Wood";
+        if (primary === "Core Wood") return "Core Wood";
+        return "Stone";
+      }
+
+      function calcMaterials(blueprint, buildingType, primary) {
+        const c = blueprint.counts;
+        const n = blueprint.size;
+        const mat = materialKey(primary);
+        const isStone = primary === "Stone";
+        const isCore = primary === "Core Wood";
+
+        // Phase costs (logical Valheim-ish ratios)
+        const floorPerTile = isStone ? 2 : 1;
+        const wallPerSeg = isStone ? 3 : 2;
+        const roofPerTile = isStone ? 1 : 1; // thatch still needs wood/resin conceptually
+        const roofTiles = Math.ceil(c.floorTiles * 1.15);
+
+        const phase1 = {};
+        phase1[mat] = c.floorTiles * floorPerTile;
+        if (!isStone) phase1["Resin"] = Math.ceil(c.floorTiles * 0.15);
+
+        const phase2 = {};
+        phase2[mat] = c.wall * wallPerSeg + c.door * 4;
+        if (isCore) phase2["Wood"] = c.door * 2;
+        if (isStone) phase2["Wood"] = Math.ceil(c.wall * 0.5);
+
+        const phase3 = {};
+        // Roof: thatch-style — Fine Wood / Wood + Resin; stone builds still need wood roofing
+        phase3["Wood"] = Math.ceil(roofTiles * (isCore ? 0.5 : 1));
+        phase3["Fine Wood"] = Math.ceil(roofTiles * (buildingType === "Viking Longhouse" ? 0.8 : 0.4));
+        phase3["Resin"] = Math.ceil(roofTiles * 0.35);
+        if (isStone) {
+          phase3["Stone"] = Math.ceil(n * 2); // chimney collar
+        }
+
+        const phase4 = {};
+        phase4["Wood"] = c.chest * 10 + c.bed * 8 + (c.craft > 0 ? 10 : 0);
+        phase4["Fine Wood"] = c.bed * 4 + (c.portal > 0 ? 20 : 0);
+        phase4["Deer Hide"] = c.bed * 2;
+        phase4["Stone"] = c.hearth * 5 + (c.craft > 0 ? 4 : 0);
+        phase4["Surtling Cores"] = c.hearth * 1 + (c.craft > 0 ? 5 : 0) + (c.portal > 0 ? 2 : 0);
+        if (c.portal > 0) phase4["Greydwarf Eye"] = 10;
+        if (buildingType === "Crafting Hub") {
+          phase4["Copper"] = 20;
+          phase4["Tin"] = 10;
+        }
+        if (buildingType === "Defensive Watchtower") {
+          phase4["Stone"] = (phase4["Stone"] || 0) + Math.ceil(n * 4);
+        }
+
+        function clean(obj) {
+          const out = {};
+          Object.keys(obj).forEach(function (k) {
+            if (obj[k] > 0) out[k] = obj[k];
+          });
+          return out;
+        }
+
+        const p1 = clean(phase1);
+        const p2 = clean(phase2);
+        const p3 = clean(phase3);
+        const p4 = clean(phase4);
+
+        const total = {};
+        [p1, p2, p3, p4].forEach(function (phase) {
+          Object.keys(phase).forEach(function (k) {
+            total[k] = (total[k] || 0) + phase[k];
+          });
+        });
+
+        return { phase1: p1, phase2: p2, phase3: p3, phase4: p4, total: total };
+      }
+
+      function stacksAndSlots(qty) {
+        const fullStacks = Math.floor(qty / STACK_SIZE);
+        const remainder = qty % STACK_SIZE;
+        const slots = fullStacks + (remainder > 0 ? 1 : 0);
+        return { fullStacks: fullStacks, remainder: remainder, slots: slots };
+      }
+
+      function aggregateCarryStats(total) {
+        let fullStacksSum = 0;
+        let slotsSum = 0;
+        Object.keys(total).forEach(function (k) {
+          const s = stacksAndSlots(total[k]);
+          fullStacksSum += s.fullStacks;
+          slotsSum += s.slots;
+        });
+        return { fullStacks: fullStacksSum, slots: slotsSum };
+      }
+
+      /* —— Draw canvas —— */
+      function drawBlueprint(blueprint) {
+        const grid = blueprint.grid;
+        const n = blueprint.size;
+        const W = canvas.width;
+        const H = canvas.height;
+        const pad = 8;
+        const cell = Math.floor((Math.min(W, H) - pad * 2) / n);
+        const ox = Math.floor((W - cell * n) / 2);
+        const oy = Math.floor((H - cell * n) / 2);
+
+        ctx.clearRect(0, 0, W, H);
+
+        // Atmosphere
+        const bg = ctx.createRadialGradient(W / 2, H / 2, 10, W / 2, H / 2, W * 0.7);
+        bg.addColorStop(0, "#1e2a14");
+        bg.addColorStop(1, "#0c1008");
+        ctx.fillStyle = bg;
+        ctx.fillRect(0, 0, W, H);
+
+        for (let y = 0; y < n; y++) {
+          for (let x = 0; x < n; x++) {
+            const v = grid[y][x];
+            const px = ox + x * cell;
+            const py = oy + y * cell;
+
+            // Base tile
+            if (v === CELL.WALL) {
+              ctx.fillStyle = "#4a3a2a";
+            } else if (v === CELL.DOOR) {
+              ctx.fillStyle = "#3a2a18";
+            } else {
+              ctx.fillStyle = (x + y) % 2 === 0 ? "#2a3820" : "#243218";
+            }
+            ctx.fillRect(px, py, cell, cell);
+
+            // Wall texture hatch
+            if (v === CELL.WALL) {
+              ctx.strokeStyle = "rgba(90, 70, 45, 0.5)";
+              ctx.beginPath();
+              ctx.moveTo(px, py + cell);
+              ctx.lineTo(px + cell, py);
+              ctx.stroke();
+            }
+
+            // Grid lines
+            ctx.strokeStyle = "rgba(0, 0, 0, 0.35)";
+            ctx.strokeRect(px + 0.5, py + 0.5, cell - 1, cell - 1);
+
+            // Hearth glow
+            if (v === CELL.HEARTH) {
+              const g = ctx.createRadialGradient(
+                px + cell / 2,
+                py + cell / 2,
+                2,
+                px + cell / 2,
+                py + cell / 2,
+                cell * 1.2
+              );
+              g.addColorStop(0, "rgba(255, 160, 40, 0.55)");
+              g.addColorStop(1, "transparent");
+              ctx.fillStyle = g;
+              ctx.fillRect(px - cell, py - cell, cell * 3, cell * 3);
+            }
+
+            const emoji = CELL_EMOJI[v];
+            if (emoji) {
+              const fontSize = Math.max(10, Math.floor(cell * 0.55));
+              ctx.font = fontSize + "px serif";
+              ctx.textAlign = "center";
+              ctx.textBaseline = "middle";
+              ctx.fillText(emoji, px + cell / 2, py + cell / 2 + 1);
+            }
+          }
+        }
+
+        // Outer frame
+        ctx.strokeStyle = "#e8a040";
+        ctx.lineWidth = 2;
+        ctx.strokeRect(ox - 1, oy - 1, cell * n + 2, cell * n + 2);
+        ctx.lineWidth = 1;
+      }
+
+      /* —— Render shopping list —— */
+      function renderShoppingList(materials) {
+        const total = materials.total;
+        const stats = aggregateCarryStats(total);
+        fullStacksTotalEl.textContent = String(stats.fullStacks);
+        inventorySlotsEl.textContent = String(stats.slots);
+
+        materialListEl.innerHTML = "";
+        const names = Object.keys(total).sort(function (a, b) {
+          return total[b] - total[a];
+        });
+
+        names.forEach(function (name) {
+          const qty = total[name];
+          const s = stacksAndSlots(qty);
+          const li = document.createElement("li");
+
+          const left = document.createElement("div");
+          left.className = "mat-name";
+          left.appendChild(document.createTextNode(name + " "));
+          left.appendChild(wikiAnchor(name));
+
+          const right = document.createElement("div");
+          right.className = "mat-qty";
+          right.innerHTML =
+            qty +
+            ' <span class="mat-stacks">(' +
+            s.fullStacks +
+            " stack" +
+            (s.fullStacks === 1 ? "" : "s") +
+            (s.remainder ? " +" + s.remainder : "") +
+            " · " +
+            s.slots +
+            " slot" +
+            (s.slots === 1 ? "" : "s") +
+            ")</span>";
+
+          li.appendChild(left);
+          li.appendChild(right);
+          materialListEl.appendChild(li);
+        });
+
+        shopEmpty.hidden = true;
+        shopContent.hidden = false;
+      }
+
+      /* —— Construction manual —— */
+      function formatMatsInline(phaseObj) {
+        return Object.keys(phaseObj)
+          .map(function (k) {
+            return k + " ×" + phaseObj[k];
+          })
+          .join(", ");
+      }
+
+      function buildManualSteps(blueprint, buildingType, primary, materials) {
+        const n = blueprint.size;
+        const mat = materialKey(primary);
+        const hx = blueprint.hearth.x;
+        const hy = blueprint.hearth.y;
+
+        return [
+          {
+            phase: "STEP 1: Site Prep & Foundation",
+            phaseWiki: "Building",
+            steps: [
+              {
+                title: "Clear & flatten the build site",
+                wiki: "Hoe",
+                desc:
+                  "Pick a flat meadow or leveled hilltop. Clear trees and rocks in a " +
+                  (n + 4) +
+                  "×" +
+                  (n + 4) +
+                  " area. Raise/lower ground with the Hoe until the plot is level.",
+                mats: {},
+              },
+              {
+                title: "Snap the floor grid (" + n + "×" + n + ")",
+                wiki: mat,
+                desc:
+                  "Lay " +
+                  blueprint.counts.floorTiles +
+                  " foundation tiles using " +
+                  mat +
+                  ". Align to the snap grid so walls will meet cleanly later.",
+                mats: materials.phase1,
+              },
+            ],
+          },
+          {
+            phase: "STEP 2: Framing & Outer Walls",
+            phaseWiki: "Building",
+            steps: [
+              {
+                title: "Raise perimeter walls",
+                wiki: mat,
+                desc:
+                  "Place " +
+                  blueprint.counts.wall +
+                  " wall segments along the outer boundary. Leave door openings unblocked.",
+                mats: (function () {
+                  const m = {};
+                  const wallOnly = Math.max(
+                    0,
+                    (materials.phase2[mat] || 0) -
+                      blueprint.counts.door * 4
+                  );
+                  if (wallOnly) m[mat] = wallOnly;
+                  Object.keys(materials.phase2).forEach(function (k) {
+                    if (k !== mat) m[k] = materials.phase2[k];
+                  });
+                  return m;
+                })(),
+              },
+              {
+                title: "Door arches & window gaps",
+                wiki: "Door",
+                desc:
+                  "Install " +
+                  blueprint.counts.door +
+                  " door(s) on the marked edge tiles. Cut 1-tile window gaps mid-wall for light and archery sightlines.",
+                mats: (function () {
+                  const m = {};
+                  m[mat] = blueprint.counts.door * 4;
+                  return m;
+                })(),
+              },
+            ],
+          },
+          {
+            phase: "STEP 3: Roof & Smoke Ventilation",
+            phaseWiki: "Roof",
+            steps: [
+              {
+                title: "Place 26° / 45° thatch roofs",
+                wiki: "Roof",
+                desc:
+                  "Cap the structure with thatch roof pieces. Use 26° for wide halls and 45° near gables. Overhang eaves by one tile to shed rain.",
+                mats: (function () {
+                  const m = Object.assign({}, materials.phase3);
+                  if (m.Stone) delete m.Stone;
+                  return m;
+                })(),
+              },
+              {
+                title: "Chimney opening above the Hearth",
+                wiki: "Hearth",
+                desc:
+                  "Leave a vertical smoke shaft / roof hole directly above the Hearth at grid (" +
+                  hx +
+                  ", " +
+                  hy +
+                  "). Without ventilation, indoor smoke will damage you — keep a clear column through the roof.",
+                mats: materials.phase3.Stone
+                  ? { Stone: materials.phase3.Stone }
+                  : { Resin: Math.min(10, materials.phase3.Resin || 5) },
+              },
+            ],
+          },
+          {
+            phase: "STEP 4: Interior Design & Utilities",
+            phaseWiki: "Comfort",
+            steps: [
+              {
+                title: "Hearth, workbenches & forge",
+                wiki: "Workbench",
+                desc:
+                  "Place the Hearth with open floor clearance on all sides (already reserved on the blueprint). Add Workbench" +
+                  (blueprint.counts.craft ? " / Forge stations" : "") +
+                  " against reinforced walls.",
+                mats: (function () {
+                  const m = {};
+                  if (materials.phase4.Stone) m.Stone = materials.phase4.Stone;
+                  if (materials.phase4["Surtling Cores"])
+                    m["Surtling Cores"] = materials.phase4["Surtling Cores"];
+                  if (materials.phase4.Copper) m.Copper = materials.phase4.Copper;
+                  if (materials.phase4.Tin) m.Tin = materials.phase4.Tin;
+                  if (materials.phase4.Wood)
+                    m.Wood = Math.ceil(materials.phase4.Wood * 0.35);
+                  return m;
+                })(),
+              },
+              {
+                title: "Portals, comfort furniture & storage",
+                wiki: "Portal",
+                desc:
+                  "Tuck beds in the comfort corner, line chests along structural walls, and place" +
+                  (blueprint.counts.portal ? " a Portal 🌀" : " seating for comfort") +
+                  ". Check resting buff before sealing the last window.",
+                mats: (function () {
+                  const m = Object.assign({}, materials.phase4);
+                  delete m.Stone;
+                  delete m.Copper;
+                  delete m.Tin;
+                  if (m["Surtling Cores"] && blueprint.counts.portal)
+                    m["Surtling Cores"] = Math.min(
+                      m["Surtling Cores"],
+                      blueprint.counts.portal * 2
+                    );
+                  else delete m["Surtling Cores"];
+                  return m;
+                })(),
+              },
+            ],
+          },
+        ];
+      }
+
+      function renderManual(stepsData) {
+        manualContent.innerHTML = "";
+        stepsData.forEach(function (phase, pi) {
+          const phaseEl = document.createElement("div");
+          phaseEl.className = "phase";
+
+          const header = document.createElement("div");
+          header.className = "phase-header";
+          header.appendChild(document.createTextNode(phase.phase + " "));
+          header.appendChild(wikiAnchor(phase.phaseWiki));
+          phaseEl.appendChild(header);
+
+          phase.steps.forEach(function (step, si) {
+            const id = "step-" + pi + "-" + si;
+            const row = document.createElement("div");
+            row.className = "step";
+
+            const cb = document.createElement("input");
+            cb.type = "checkbox";
+            cb.id = id;
+            cb.addEventListener("change", function () {
+              row.classList.toggle("done", cb.checked);
+            });
+
+            const body = document.createElement("div");
+            body.className = "step-body";
+
+            const title = document.createElement("div");
+            title.className = "step-title";
+            const label = document.createElement("label");
+            label.htmlFor = id;
+            label.textContent = step.title;
+            title.appendChild(label);
+            title.appendChild(wikiAnchor(step.wiki));
+
+            const desc = document.createElement("div");
+            desc.className = "step-desc";
+            desc.textContent = step.desc;
+
+            const mats = document.createElement("div");
+            mats.className = "step-mats";
+            const keys = Object.keys(step.mats || {});
+            if (keys.length === 0) {
+              const none = document.createElement("span");
+              none.style.color = "var(--muted)";
+              none.textContent = "No materials (labor only)";
+              mats.appendChild(none);
+            } else {
+              keys.forEach(function (k) {
+                const chip = document.createElement("span");
+                chip.className = "mat-chip";
+                chip.appendChild(document.createTextNode(k + " ×" + step.mats[k] + " "));
+                chip.appendChild(wikiAnchor(k));
+                mats.appendChild(chip);
+              });
+            }
+
+            body.appendChild(title);
+            body.appendChild(desc);
+            body.appendChild(mats);
+
+            row.appendChild(cb);
+            row.appendChild(body);
+            phaseEl.appendChild(row);
+          });
+
+          manualContent.appendChild(phaseEl);
+        });
+
+        manualEmpty.hidden = true;
+        manualContent.hidden = false;
+      }
+
+      /* —— Copy steps —— */
+      function stepsToPlainText(blueprint, buildingType, primary, materials, stepsData) {
+        const lines = [];
+        lines.push("Valhomies Construction Builder ver. 1");
+        lines.push(
+          "Blueprint: " +
+            buildingType +
+            " · " +
+            primary +
+            " · " +
+            scaleEl.value +
+            " (" +
+            blueprint.size +
+            "×" +
+            blueprint.size +
+            ")"
+        );
+        lines.push("");
+        lines.push("=== SHOPPING LIST ===");
+        Object.keys(materials.total)
+          .sort(function (a, b) {
+            return materials.total[b] - materials.total[a];
+          })
+          .forEach(function (k) {
+            const s = stacksAndSlots(materials.total[k]);
+            lines.push(
+              "- " +
+                k +
+                ": " +
+                materials.total[k] +
+                " (" +
+                s.fullStacks +
+                " full stacks, " +
+                s.slots +
+                " slots) — " +
+                wikiUrl(k)
+            );
+          });
+        lines.push("");
+        lines.push("=== CONSTRUCTION MANUAL ===");
+        stepsData.forEach(function (phase) {
+          lines.push("");
+          lines.push(phase.phase);
+          phase.steps.forEach(function (step, i) {
+            lines.push((i + 1) + ". " + step.title);
+            lines.push("   " + step.desc);
+            lines.push("   Materials: " + (formatMatsInline(step.mats) || "none"));
+            lines.push("   Wiki: " + wikiUrl(step.wiki));
+          });
+        });
+        return lines.join("\n");
+      }
+
+      function showToast(msg) {
+        toastEl.textContent = msg;
+        toastEl.classList.add("show");
+        clearTimeout(showToast._t);
+        showToast._t = setTimeout(function () {
+          toastEl.classList.remove("show");
+        }, 2200);
+      }
+
+      /* —— Generate —— */
+      function generate() {
+        const buildingType = buildingTypeEl.value;
+        const primary = primaryMaterialEl.value;
+        const scale = scaleEl.value;
+
+        const blueprint = generateFloorPlan(buildingType, scale);
+        const materials = calcMaterials(blueprint, buildingType, primary);
+        const stepsData = buildManualSteps(
+          blueprint,
+          buildingType,
+          primary,
+          materials
+        );
+
+        currentBlueprint = {
+          blueprint: blueprint,
+          materials: materials,
+          stepsData: stepsData,
+          buildingType: buildingType,
+          primary: primary,
+          scale: scale,
+        };
+
+        drawBlueprint(blueprint);
+        mapEmpty.hidden = true;
+        legend.hidden = false;
+
+        renderShoppingList(materials);
+        renderManual(stepsData);
+        copyBtn.disabled = false;
+
+        showToast("Blueprint forged — raise your hall!");
+      }
+
+      async function copySteps() {
+        if (!currentBlueprint) return;
+        const text = stepsToPlainText(
+          currentBlueprint.blueprint,
+          currentBlueprint.buildingType,
+          currentBlueprint.primary,
+          currentBlueprint.materials,
+          currentBlueprint.stepsData
+        );
+        try {
+          await navigator.clipboard.writeText(text);
+          showToast("Steps copied to clipboard");
+        } catch (err) {
+          // Fallback
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          ta.style.position = "fixed";
+          ta.style.left = "-9999px";
+          document.body.appendChild(ta);
+          ta.select();
+          try {
+            document.execCommand("copy");
+            showToast("Steps copied to clipboard");
+          } catch (e2) {
+            showToast("Could not copy — select text manually");
+          }
+          document.body.removeChild(ta);
+        }
+      }
+
+      /* —— Init —— */
+      function clearCanvasPlaceholder() {
+        ctx.fillStyle = "#152010";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.strokeStyle = "rgba(232, 160, 64, 0.25)";
+        ctx.setLineDash([6, 6]);
+        ctx.strokeRect(24, 24, canvas.width - 48, canvas.height - 48);
+        ctx.setLineDash([]);
+        ctx.fillStyle = "#a89880";
+        ctx.font = "16px Cinzel, serif";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText("Awaiting blueprint…", canvas.width / 2, canvas.height / 2);
+      }
+
+      buildingTypeEl.addEventListener("change", updateBuildingWikiLink);
+      generateBtn.addEventListener("click", generate);
+      copyBtn.addEventListener("click", copySteps);
+
+      updateBuildingWikiLink();
+      clearCanvasPlaceholder();
+    })();
+  </script>
+</body>
+</html>
